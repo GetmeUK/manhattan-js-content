@@ -96,7 +96,10 @@ init = (baseURL='/', baseFlowURL='/', baseParams={}) ->
         return new ImageUploader(dialog, baseParams)
 
     # Initialize the editor
-    editor.init('[data-editable], [data-fixture]', 'data-name')
+    editor.init(
+        '[data-allow-edits] [data-editable], [data-allow-edits] [data-fixture]',
+        'data-name'
+    )
 
     # Initialize the content flow manager
     api = new FlowAPI(baseFlowURL, baseParams)
