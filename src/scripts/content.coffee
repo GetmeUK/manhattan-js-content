@@ -103,7 +103,7 @@ init = (baseURL='/', baseFlowURL='/', baseParams={}) ->
 
     # Initialize the content flow manager
     api = new FlowAPI(baseFlowURL, baseParams)
-    flowMgr.init('[data-cf-flow]', 'data-cf-flow', api)
+    flowMgr.init('[data-cf-flow]', api)
 
     # Setup save processes for flows and global content
 
