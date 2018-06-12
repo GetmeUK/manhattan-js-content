@@ -1,6 +1,6 @@
 {
   "name": "manhattan-content",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Support for uploading and managing assets to manhattan via the browser.",
   "main": "dist/index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "author": "Anthony Blackshaw",
   "license": "MIT",
   "devDependencies": {
-    "ContentTools": "^1.6.4",
+    "ContentTools": "^1.6.5",
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.12.4",
     "coffeelint": "^1.16.0",
