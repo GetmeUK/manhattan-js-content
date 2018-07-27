@@ -4,6 +4,7 @@ import * as $ from 'manhattan-essentials'
 
 import {FlowAPI} from './api'
 import {ImageTool} from './tools/imagery.js'
+import {RemoveTool} from './tools/remove.js'
 import {Lock} from './utils/locks.js'
 
 
@@ -136,7 +137,7 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
         ], [
             'undo',
             'redo',
-            'remove'
+            'manhattan-remove'
         ]
     ]
     ContentTools.DEFAULT_TOOLS = tools
