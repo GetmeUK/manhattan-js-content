@@ -14,6 +14,7 @@ module.exports = {
         "global": true,
         "it": true,
         "require": true,
+        "ContentEdit": true,
         "ContentTools": true
     },
     "parserOptions": {

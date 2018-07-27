@@ -1,0 +1,92 @@
+
+// Increase the index of the overlay asset dialogs for the in-page editing
+// environment.
+
+.mh-overlay {
+    z-index: 9999;
+
+    // Allow the overlay to be instantly displayed
+    &--no-fade {
+        transition: opacity 0.0s linear;
+    }
+}
+
+.mh-content-image-uploader {
+
+    .mh-acceptor {
+        border: 1px solid #353b48;
+        border-radius: 3px;
+
+        &:hover {
+            background: transparent;
+        }
+
+        &__drop-zone,
+        &__faceplate {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &::before {
+                background-color: transparent;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 32px;
+                content: '';
+                display: block;
+                height: 48px;
+                width: 32px;
+            }
+        }
+
+        &__drop-zone::before {
+            animation-name: image-bounce;
+            animation-duration: 0.5s;
+            animation-iteration-count: infinite;
+
+            @keyframes image-bounce {
+                0% {
+                    background-position: center 0px;
+                }
+
+                50% {
+                    background-position: center 8px;
+                }
+
+                100% {
+                    background-position: center 0px;
+                }
+            }
+        }
+    }
+
+    .mh-uploader {
+        &__cancel {
+            display: none;
+        }
+
+        &__progress-meter {
+            background: #353b48;
+            height: 16px;
+        }
+
+        &__status {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &::before {
+                background-color: transparent;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: 32px;
+                content: '';
+                display: block;
+                height: 48px;
+                width: 32px;
+            }
+        }
+    }
+}

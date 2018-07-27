@@ -3,6 +3,7 @@ import * as contentflow from 'content-flow'
 import * as $ from 'manhattan-essentials'
 
 import {FlowAPI} from './api'
+import {ImageTool} from './tools/imagery.js'
 import {Lock} from './utils/locks.js'
 
 
@@ -59,7 +60,7 @@ function defineSaveProcess(url, params, lock, contentFunc) {
                 // Flag that the save succeeded/failed
                 let flash = null
                 if (response.status === 200) {
-                    flash = new ContentTools.FlashUI('yes')
+                    flash = new ContentTools.FlashUI('ok')
                 } else {
                     flash = new ContentTools.FlashUI('no')
                 }
@@ -93,15 +94,54 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
     // Restrict special attributes
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-ce-tag')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-fixture')
-    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-asset-key')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-draft')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-crop-ratio')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-fix-crop-ratio')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-base-transforms')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-local-transforms')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-proxy')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-name')
 
     // Apply common modifications
     ContentTools.Tools.Heading.tagName = 'h2'
     ContentTools.Tools.Subheading.tagName = 'h3'
 
-    // Common behaviour
+    // Manhattan specific behaviour
+
+    // Tooling
+    const tools = [
+        [
+            'bold',
+            'italic',
+            'link',
+            'align-left',
+            'align-center',
+            'align-right'
+        ], [
+            'heading',
+            'subheading',
+            'paragraph',
+            'unordered-list',
+            'ordered-list',
+            'table',
+            'indent',
+            'unindent',
+            'line-break'
+        ], [
+            'manhattan-image',
+            'video',
+            'preformatted'
+        ], [
+            'undo',
+            'redo',
+            'remove'
+        ]
+    ]
+    ContentTools.DEFAULT_TOOLS = tools
+
+    // Flag relevant elements when the editor is in user
     editor.addEventListener(
         'start',
         () => {
@@ -119,8 +159,6 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
             }
         }
     )
-
-    // @@ Configure the image uploader
 
     // Initialize the page content editor
     editor.init(
