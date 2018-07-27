@@ -7,6 +7,8 @@ module.exports = {
     },
 
     externals: {
+        'ContentTools': 'ContentTools',
+        'content-flow': 'content-flow',
         'manhattan-assets': 'manhattan-assets',
         'manhattan-essentials': 'manhattan-essentials'
     },
