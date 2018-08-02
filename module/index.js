@@ -102,8 +102,8 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-base-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-local-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-proxy')
-    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-transform-proxied')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-name')
 
     // Apply common modifications
