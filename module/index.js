@@ -171,6 +171,10 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
     // Initialize the page flow manager
     flowMgr.init('[data-cf-flow]', new FlowAPI(baseFlowURL, baseParams))
 
+    // Create an element in which manhattan specific UI elements should be
+    // rooted.
+    document.body.appendChild($.create('div', {'data-mh-content-ui': ''}))
+
     // Configure save behaviour for flows and global content
 
     // Flows

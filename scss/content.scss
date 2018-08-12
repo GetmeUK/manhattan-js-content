@@ -1,2 +1,4 @@
 
-@import 'ui/image-uploader';
+[data-mh-content-ui] {
+    @import 'ui/image-uploader';
+}

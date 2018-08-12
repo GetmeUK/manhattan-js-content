@@ -11,8 +11,8 @@ import {Uploader} from 'manhattan-assets/module/ui/uploader'
  */
 export class ImageUploader extends Overlay {
 
-    constructor(uploadURL) {
-        super()
+    constructor(uploadURL, container=null) {
+        super(container)
 
         // The URL images should be uploaded to
         this._uploadURL = uploadURL

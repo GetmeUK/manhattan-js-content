@@ -68,7 +68,10 @@ class ImageTool extends ContentTools.Tool {
         } else {
 
             // Make the upload URL configurable
-            const imageUploader = new ImageUploader(ImageTool.uploadURL)
+            const imageUploader = new ImageUploader(
+                ImageTool.uploadURL,
+                $.one('[data-mh-content-ui]')
+            )
             imageUploader.init()
             imageUploader.show()
 
@@ -174,7 +177,8 @@ class ImageTool extends ContentTools.Tool {
             imageURL,
             cropRatio,
             fixCropRatio,
-            [600, 600]
+            [600, 600],
+            $.one('[data-mh-content-ui]')
         )
         imageEditor.init()
         imageEditor.show()
