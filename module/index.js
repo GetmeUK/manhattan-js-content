@@ -83,7 +83,12 @@ function defineSaveProcess(url, params, lock, contentFunc) {
 
 // -- Initializer --
 
-export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
+export function init(
+    baseURL='/',
+    baseFlowURL='/',
+    baseParams={},
+    updateSignalKey=null
+) {
 
     // Set-up the editor and flow manager
     const editor = contenttools.EditorApp.get()
@@ -169,7 +174,14 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
     )
 
     // Initialize the page flow manager
-    flowMgr.init('[data-cf-flow]', new FlowAPI(baseFlowURL, baseParams))
+    flowMgr.init(
+        '[data-cf-flow]',
+        new FlowAPI(
+            baseFlowURL,
+            baseParams,
+            updateSignalKey
+        )
+    )
 
     // Create an element in which manhattan specific UI elements should be
     // rooted.
@@ -238,4 +250,31 @@ export function init(baseURL='/', baseFlowURL='/', baseParams={}) {
         )
     )
 
+    if (updateSignalKey) {
+
+        // Set up content update signalling for related tabs
+        editor.addEventListener(
+            'saved',
+            () => {
+                $.dispatch(
+                    window,
+                    'contentupdatesignalled',
+                    {'key': updateSignalKey}
+                )
+            }
+        )
+
+        $.listen(
+            window,
+            {
+                'contentupdatesignalled': (event) => {
+                    // Signal a contentchange to any other tabs listening
+                    localStorage.setItem(event.key, Date.now())
+                }
+            }
+        )
+    }
+
 }
+
+
