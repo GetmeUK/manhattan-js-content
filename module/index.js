@@ -174,14 +174,19 @@ export function init(
     )
 
     // Initialize the page flow manager
-    flowMgr.init(
-        '[data-cf-flow]',
-        new FlowAPI(
-            baseFlowURL,
-            baseParams,
-            updateSignalKey
+    if ($.one('[data-cf-snippet]')) {
+        flowMgr.init(
+            '[data-cf-flow]',
+            new FlowAPI(
+                baseFlowURL,
+                baseParams,
+                updateSignalKey
+            )
         )
-    )
+    } else {
+        // Flag that the page has no data flows
+        document.body.dataset.mhNoDataFlows = ''
+    }
 
     // Create an element in which manhattan specific UI elements should be
     // rooted.

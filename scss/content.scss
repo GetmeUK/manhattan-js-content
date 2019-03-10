@@ -2,3 +2,9 @@
 [data-mh-content-ui] {
     @import 'ui/image-uploader';
 }
+
+[data-mh-no-data-flows] {
+    .ct-ignition {
+        right: 64px;
+    }
+}
