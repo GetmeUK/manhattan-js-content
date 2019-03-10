@@ -174,7 +174,7 @@ export function init(
     )
 
     // Initialize the page flow manager
-    if ($.one('[data-cf-snippet]')) {
+    if ($.one('[data-cf-flow]')) {
         flowMgr.init(
             '[data-cf-flow]',
             new FlowAPI(
@@ -281,5 +281,3 @@ export function init(
     }
 
 }
-
-
