@@ -4,6 +4,12 @@
 }
 
 [data-mh-no-data-flows] {
+    &.ct--editing {
+        .ct-ignition {
+            right: 128px;
+        }
+    }
+
     .ct-ignition {
         right: 64px;
     }
