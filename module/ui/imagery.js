@@ -99,7 +99,7 @@ export class ImageUploader extends Overlay {
         )
         formData.append('file', file)
         formData.append('file_type', 'image')
-        formData.append('no_thumb', 'true')
+        formData.append('in_page', 'in_page')
 
         this._uploader = new Uploader(
             this.content,
