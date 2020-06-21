@@ -90,9 +90,6 @@ export function init(
     baseParams={},
     updateSignalKey=null
 ) {
-
-    console.log(PictureElement)
-
     // Register additional elements
     ContentEdit.TagNames.get().register(PictureElement, 'picture')
 
