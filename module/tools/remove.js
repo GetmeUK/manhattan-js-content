@@ -13,14 +13,22 @@ class RemoveTool extends ContentTools.Tool {
      */
     static canApply(elm, selection) {
         if (elm.isFixed()) {
-            return elm.type() === 'ImageFixture'
+            if (elm.type() === 'ImageFixture') {
+                return true
+            }
+
+            if (elm.type() === 'PictureFixture') {
+                return elm.sources().length > 0
+            }
+
+            return false
         }
         return true
     }
 
     /**
      * Apply the default remove tool behaviour but also support for clearing
-     * images from image fixtures.
+     * images from image fixtures and pictures.
      */
     static apply(elm, selection, onDone) {
         if (elm.type() === 'ImageFixture') {
@@ -43,6 +51,24 @@ class RemoveTool extends ContentTools.Tool {
             elm.removeAttr('data-mh-local-transforms')
 
             RemoveTool.dispatchEditorEvent('tool-apply', eventDetails)
+
+        } else if (elm.type() === 'PictureFixture') {
+
+            const eventDetails = {
+                'tool': RemoveTool,
+                'element': elm,
+                selection
+            }
+
+            if (!RemoveTool.dispatchEditorEvent('tool-apply', eventDetails)) {
+                return
+            }
+
+            // Clear the picture's associated imagery
+            elm.sources([])
+
+            RemoveTool.dispatchEditorEvent('tool-apply', eventDetails)
+
 
         } else {
             ContentTools.Tools.Remove.apply(elm, selection, onDone)

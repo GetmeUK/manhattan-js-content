@@ -2,19 +2,16 @@
 /**
  * A manage a picture element as a fixture.
  */
-export class PictureElement extends ContentEdit.Element {
+export class PictureFixture extends ContentEdit.Element {
 
-    constructor(attributes, src, sources) {
+    constructor(attributes, sources) {
         super('picture', attributes)
-
-        // The image source
-        this._src = src
 
         // The source for the picture
         this._sources = []
         if (sources) {
             for (const source of sources) {
-                this._sources.push(Object.assign(source))
+                this._sources.push(Object.assign({}, source))
             }
         }
     }
@@ -24,7 +21,7 @@ export class PictureElement extends ContentEdit.Element {
     }
 
     type() {
-        return 'Picture'
+        return 'PictureFixture'
     }
 
     typeName() {
@@ -34,26 +31,46 @@ export class PictureElement extends ContentEdit.Element {
     html(indent='') {
         const le = ContentEdit.LINE_ENDINGS
 
-        const alt = `alt="${this._attributes['alt'] || ''}"`
-        const attributes = this._attributesToString()
-        const img = `${indent}<img src="${this.src()}" ${alt}>`
-
         const lines = []
-        lines.push(`${indent}<${this.tagName()} ${attributes}>${le}`)
+
+        const pictureAttributes = Object.assign({}, this._attributes)
+        delete pictureAttributes['alt']
+        const pictureAttributesString = ContentEdit
+            .attributesToString(pictureAttributes)
+
+        lines.push(`${indent}`
+            + `<${this.tagName()} ${pictureAttributesString}>`)
+
         for (const source of this._sources) {
-            let mediaAttr = ''
-            if (source.media) {
-                mediaAttr = ` media="${source.media}"`
+            const sourceAttributesString = ContentEdit
+                .attributesToString(source)
+            lines.push(`${indent}${ContentEdit.INDENT}`
+                + `<source ${sourceAttributesString}>${le}`)
+        }
+
+        if (this._sources.length > 0) {
+            lines[0] = `${lines[0]}${le}`
+
+            const imageAttributes = {
+                'src': this._sources[0].srcset,
+                'alt': this._attributes['alt'] || ''
             }
+            const imageAttributesString = ContentEdit
+                .attributesToString(imageAttributes)
 
             lines.push(`${indent}${ContentEdit.INDENT}`
-                + `<source srcset="${source.srcset}"`
-                + `{mediaAttr}>${le}`)
-        }
-        lines.push(`${ContentEdit.INDENT}${img}${le}`)
-        lines.push(`${indent}</${this.tagName()}>`)
+                + `<img ${imageAttributesString}>${le}`)
 
-        lines.join('')
+            lines.push(`${indent}</${this.tagName()}>`)
+        } else {
+
+            // Avoid spaces in the tag if the picture element is blank
+            lines.push(`</${this.tagName()}>`)
+        }
+
+        console.log(lines.join(''))
+
+        return lines.join('')
     }
 
     mount() {
@@ -71,17 +88,19 @@ export class PictureElement extends ContentEdit.Element {
         // Sources
         for (const source of this._sources) {
             const sourceElm = document.createElement('source')
-            sourceElm.setAttr('srcset', source.srcset)
+            sourceElm.setAttribute('srcset', source.srcset)
             if (source.media) {
-                sourceElm.setAttr('media', source.media)
+                sourceElm.setAttribute('media', source.media)
             }
+            this._domElement.appendChild(sourceElm)
         }
 
         // Image
-        const imgElm = document.createElement('img')
-        imgElm.src = this.src()
-        this._domElement.appendChild(imgElm)
-
+        if (this._sources.length > 0) {
+            const imgElm = document.createElement('img')
+            imgElm.src = this._sources[0].srcset
+            this._domElement.appendChild(imgElm)
+        }
         super.mount()
     }
 
@@ -91,32 +110,15 @@ export class PictureElement extends ContentEdit.Element {
         if (typeof sources === 'undefined') {
             const cloned = []
             for (source of this._sources) {
-                cloned.push(Object.assign(source))
+                cloned.push(Object.assign({}, source))
             }
             return cloned
         }
 
         this._sources = []
         for (source of this._sources) {
-            this._sources.push(Object.assign(source))
+            this._sources.push(Object.assign({}, source))
         }
-
-        if (this.isMounted()) {
-            this.unmount()
-            this.mount()
-        }
-
-        this.taint()
-
-        return null
-    }
-
-    src(src) {
-        if (typeof src === 'undefined') {
-            return this._src
-        }
-
-        this._src = src
 
         if (this.isMounted()) {
             this.unmount()
@@ -140,35 +142,29 @@ export class PictureElement extends ContentEdit.Element {
 
     static fromDOMElement(domElement) {
         const {tagName} = domElement
-        let attributes = PictureElement.getDOMElementAttributes(domElement)
+        let attributes = PictureFixture.getDOMElementAttributes(domElement)
 
         let src = ''
         let alt = ''
         const sources = []
         for (const childNode of [...domElement.childNodes]) {
-            if (childNode.nodeType !== 1) {
-                if (childNode.tagName.toLowerCase() === 'img') {
-                    src = childNode.getAttribute('src') || ''
-                    alt = childNode.getAttribute('alt') || ''
-
-                } else if (childNode.tagName.toLowerCase() === 'source') {
-                    let source = {'srcset': childNode.getAttribute('srcset')}
-                    if (childNode.getAttribute('media')) {
-                        source['media'] = childNode.getAttribute('media')
-                    }
+            if (childNode.nodeType === 1) {
+                if (childNode.tagName.toLowerCase() === 'source') {
+                    let source = PictureFixture
+                        .getDOMElementAttributes(childNode)
                     sources.push(source)
                 }
             }
         }
 
-        attributes = PictureElement.getDOMElementAttributes(domElement)
+        attributes = PictureFixture.getDOMElementAttributes(domElement)
         attributes['alt'] = alt
 
-        return new PictureElement(attributes, src, sources)
+        return new PictureFixture(attributes, sources)
     }
 }
 
-PictureElement.droppers = {
+PictureFixture.droppers = {
     'Image': ContentEdit.Element._dropVert,
     'PreText': ContentEdit.Element._dropVert,
     'Static': ContentEdit.Element._dropVert,

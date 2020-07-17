@@ -3,7 +3,7 @@ import * as contentflow from 'content-flow'
 import * as $ from 'manhattan-essentials'
 
 import {FlowAPI} from './api'
-import {PictureElement} from './elements/picture.js'
+import {PictureFixture} from './elements/picture.js'
 import {ImageTool} from './tools/imagery.js'
 import {RemoveTool} from './tools/remove.js'
 import {Lock} from './utils/locks.js'
@@ -91,7 +91,7 @@ export function init(
     updateSignalKey=null
 ) {
     // Register additional elements
-    ContentEdit.TagNames.get().register(PictureElement, 'picture')
+    ContentEdit.TagNames.get().register(PictureFixture, 'picture')
 
     // Set-up the editor and flow manager
     const editor = contenttools.EditorApp.get()
