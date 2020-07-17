@@ -68,8 +68,6 @@ export class PictureFixture extends ContentEdit.Element {
             lines.push(`</${this.tagName()}>`)
         }
 
-        console.log(lines.join(''))
-
         return lines.join('')
     }
 
