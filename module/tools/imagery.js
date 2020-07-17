@@ -2,7 +2,7 @@ import * as contenttools from 'ContentTools'
 import * as $ from 'manhattan-essentials'
 import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
 
-import {ImageUploader} from './../ui/imagery'
+import {ImageUploader} from './../ui/image-uploader'
 
 /**
  * A custom insert/update image tool for ContentTools / Manhattan.

@@ -4,7 +4,7 @@ import * as $ from 'manhattan-essentials'
 
 import {FlowAPI} from './api'
 import {PictureFixture} from './elements/picture.js'
-import {ImageTool} from './tools/imagery.js'
+import {ImageTool} from './tools/image.js'
 import {RemoveTool} from './tools/remove.js'
 import {Lock} from './utils/locks.js'
 
