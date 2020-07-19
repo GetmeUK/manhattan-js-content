@@ -2,8 +2,9 @@ import * as contenttools from 'ContentTools'
 import * as $ from 'manhattan-essentials'
 import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
 
-import {ImageUploader} from './../ui/image-uploader'
-
+import * as image from './imagery/image.js'
+import * as imageFixture from './imagery/image-fixture.js'
+import * as pictureFixture from './imagery/picture-fixture.js'
 
 /**
  * A custom insert/update image tool for ContentTools / Manhattan.
@@ -27,14 +28,34 @@ class ImageTool extends ContentTools.Tool {
      */
     static apply(elm, selection, onDone) {
 
-        // Dispatch the apply event
-        const eventDetails = {
-            'tool': ImageTool,
-            'element': elm,
-            selection
+        // Wrap the `onDone` callback so that we can trigger the
+        // 'tool-applied' event when the application of the tool is done.
+        const onDoneWrapped = (done) => {
+            onDone(done)
+
+            if (done) {
+                ImageTool.dispatchEditorEvent(
+                    'tool-applied',
+                    {
+                        'tool': ImageTool,
+                        'element': elm,
+                        selection
+                    }
+                )
+            }
         }
 
-        if (!ImageTool.dispatchEditorEvent('tool-apply', eventDetails)) {
+        // Dispatch the apply event
+        const allow = ImageTool.dispatchEditorEvent(
+            'tool-apply',
+            {
+                'tool': ImageTool,
+                'element': elm,
+                selection
+            }
+        )
+
+        if (!allow) {
             return
         }
 
@@ -44,19 +65,19 @@ class ImageTool extends ContentTools.Tool {
             elm.storeState()
         }
 
-        // @@ Based on the type of element call the relevant apply
+        // Based on the type of element call the relevant apply
         switch (elm.type()) {
 
         case 'ImageFixture':
-            console.log('image fixture')
+            imageFixture.apply(elm, onDoneWrapped, ImageTool.uploadURL)
             break
 
         case 'PictureFixture':
-            console.log('picture fixture')
+            pictureFixture.apply(elm, onDoneWrapped, ImageTool.uploadURL)
             break
 
         default:
-            console.log('image')
+            image.apply(elm, onDoneWrapped, ImageTool.uploadURL)
 
         }
     }
