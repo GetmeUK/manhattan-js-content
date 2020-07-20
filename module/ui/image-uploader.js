@@ -7,7 +7,7 @@ import {Uploader} from 'manhattan-assets/module/ui/uploader'
 
 
 /**
- * An overlay that allows users to upload an image
+ * An overlay that allows users to upload an image.
  */
 export class ImageUploader extends Overlay {
 

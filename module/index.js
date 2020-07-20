@@ -113,6 +113,8 @@ export function init(
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-transform-proxied')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-transforms')
     ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-name')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-image-set-proxied')
+    ContentTools.RESTRICTED_ATTRIBUTES['*'].push('data-mh-image-proxied')
 
     // Apply common modifications
     ContentTools.Tools.Heading.tagName = 'h2'
