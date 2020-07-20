@@ -37,39 +37,3 @@ export function convertTransforms(transforms) {
 
     return mhTransforms
 }
-
-/**
- * @@
- * Return crop instructions for the given image, or sensible defaults if there
- * are none.
- */
-export function getCropOptions(elm, naturalRatio) {
-    let cropRatio = naturalRatio
-    let fixCropRatio = false
-
-    // @@ This no longer needs to cope with images
-
-    if (typeof elm.attr('data-mh-transform-proxied') === 'undefined') {
-        if (elm.attr('data-mh-crop-ratio')) {
-            cropRatio = parseFloat(elm.attr('data-mh-crop-ratio'))
-        }
-        if (typeof elm.attr('data-mh-fix-crop-ratio') !== 'undefined') {
-            fixCropRatio = true
-        }
-    } else {
-        const proxyElm = $.closest(
-            elm.domElement(),
-            '[data-mh-transform-proxy]'
-        )
-        if (proxyElm) {
-            if (proxyElm.dataset.mhCropRatio) {
-                cropRatio = parseFloat(proxyElm.dataset.mhCropRatio)
-            }
-            if ('mhFixCropRatio' in proxyElm.dataset) {
-                fixCropRatio = true
-            }
-        }
-    }
-
-    return [cropRatio, fixCropRatio]
-}

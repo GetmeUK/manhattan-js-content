@@ -5,6 +5,6 @@
 /**
  * Apply the picture fixture tool.
  */
-export function apply(elm, selection, onDone) {
+export function apply(elm, onDone, uploadURL) {
     console.log('Picture fixture')
 }
