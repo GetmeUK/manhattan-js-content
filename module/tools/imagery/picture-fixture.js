@@ -3,7 +3,7 @@ import * as $ from 'manhattan-essentials'
 
 import {ImageSetEditor} from './../../ui/image-set-editor'
 import {ImageUploader} from './../../ui/image-uploader'
-import {convertTransforms} from './utils'
+import {transformsToClient, transformsToServer} from './utils'
 
 
 // Private
@@ -128,11 +128,6 @@ export function apply(elm, onDone, uploadURL) {
 
 
 // # TODO
-//
-// - Support for converting transforms between those the editor understands
-//   and those manhattan understands. As we need to be able to reproduce the
-//   local transforms within the editor we need to be able to convert between
-//   not just one way.
 //
 // - Build a custom VersionEditor as a base, we'll have a bunch of work to do
 //   to this but initially don't create the controls and get the custom CSS in

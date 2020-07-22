@@ -3,7 +3,7 @@ import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
 import * as $ from 'manhattan-essentials'
 
 import {ImageUploader} from './../../ui/image-uploader'
-import {convertTransforms} from './utils'
+import {transformsToServer} from './utils'
 
 
 // Private
@@ -134,7 +134,7 @@ function editImage(
                     }
 
                     const baseTransforms
-                        = convertTransforms(imageEditor.transforms)
+                        = transformsToServer(imageEditor.transforms)
 
                     if (baseTransforms) {
                         attrs['data-mh-base-transforms']

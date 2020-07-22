@@ -1,11 +1,49 @@
 
 import * as $ from 'manhattan-essentials'
 
+/**
+ * Convert a set of transforms from the server into a suitable format for the
+ * client-side image editor.
+ */
+export function transformsToClient(transforms) {
+    const clientTransforms = []
+
+    for (let transform of transforms) {
+        switch (transform.id) {
+
+        case 'image.rotate':
+            clientTransforms.push(['rotate', transform.settings.angle])
+            break
+
+        case 'image.crop':
+            clientTransforms.push([
+                'crop',
+                [
+                    [
+                        transform.settings.left,
+                        transform.settings.top
+                    ],
+                    [
+                        transform.settings.right,
+                        transform.settings.bottom
+                    ]
+                ]
+            ])
+            break
+
+        // no default
+
+        }
+    }
+
+    return clientTransforms
+}
 
 /**
- * Convert a set of transforms from the image editor into the manhattan format.
+ * Convert a set of client transforms from the image editor into a suitable
+ * format for the server.
  */
-export function convertTransforms(transforms) {
+export function transformsToServer(transforms) {
     const mhTransforms = []
 
     for (let transform of transforms) {
@@ -37,3 +75,5 @@ export function convertTransforms(transforms) {
 
     return mhTransforms
 }
+
+// @@ User terms transformsToClient
