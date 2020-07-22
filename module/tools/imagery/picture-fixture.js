@@ -50,9 +50,32 @@ function editImage(
  */
 export function apply(elm, onDone, uploadURL) {
 
+    let assetKeys = null
+    let imageURLs = null
+
     if (elm.sources().length > 0) {
+
         // Edit existing image
-        console.log('Existing image')
+        assetKeys = {}
+        imageURLs = {}
+        const localTransforms = {}
+
+        for (const source of elm.sources()) {
+            const version = source['data-mh-version']
+            assetKeys[version] = source['data-mh-asset-key']
+            imageURLs[version] = source['data-mh-draft']
+            localTransforms[version] = source['data-mh-local-transforms'] || []
+        }
+
+        editImage(
+            elm,
+            onDone,
+            uploadURL,
+            assetKeys,
+            imageURLs,
+            localTransforms,
+            false
+        )
 
     } else {
         // Insert a new image
@@ -86,10 +109,10 @@ export function apply(elm, onDone, uploadURL) {
                     const meta = event.asset['core_meta']['image']
                     const {variations} = event.asset
 
-                    const assetKeys = {}
+                    assetKeys = {}
                     assetKeys[versions[0]] = asset['key']
 
-                    const imageURLs = {}
+                    imageURLs = {}
                     imageURLs[versions[0]] = variations['--draft--']['url']
 
                     editImage(

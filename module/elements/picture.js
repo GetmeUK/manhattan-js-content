@@ -7,6 +7,8 @@ export class PictureFixture extends ContentEdit.Element {
     constructor(attributes, sources) {
         super('picture', attributes)
 
+        console.log(attributes)
+
         // The source for the picture
         this._sources = []
         if (sources) {
@@ -151,6 +153,8 @@ export class PictureFixture extends ContentEdit.Element {
                     let source = PictureFixture
                         .getDOMElementAttributes(childNode)
                     sources.push(source)
+                } else if (childNode.tagName.toLowerCase() === 'img') {
+                    alt = childNode.getAttribute('alt')
                 }
             }
         }
