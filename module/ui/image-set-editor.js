@@ -12,7 +12,7 @@ export class ImageSetEditor {
     constructor(
         assetKeys,
         imageURLs,
-        localTransforms,
+        baseTransforms,
         versions,
         versionLabels,
         cropAspectRatios,
@@ -26,8 +26,8 @@ export class ImageSetEditor {
         // A map of image URLs for versions
         this._imageURLs = Object.assign({}, imageURLs)
 
-        // A set of local transforms
-        this._localTransforms = Object.assign({}, localTransforms)
+        // A map of base transforms for versions
+        this._baseTransforms = Object.assign({}, baseTransforms)
 
         // A list of versions defined for the image set
         this._versions = versions.slice()

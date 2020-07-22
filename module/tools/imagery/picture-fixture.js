@@ -17,7 +17,7 @@ function editImage(
     uploadURL,
     assetKeys,
     imageURLs,
-    localTransforms,
+    baseTransforms,
     transition
 ) {
     let proxy = $.closest(elm.domElement(), '[data-mh-image-set-proxy]')
@@ -30,7 +30,7 @@ function editImage(
     const imageEditor = new ImageSetEditor(
         assetKeys,
         imageURLs,
-        localTransforms,
+        baseTransforms,
         versions,
         versionLabels,
         cropAspectRatios,
@@ -58,13 +58,14 @@ export function apply(elm, onDone, uploadURL) {
         // Edit existing image
         assetKeys = {}
         imageURLs = {}
-        const localTransforms = {}
+        const baseTransforms = {}
 
         for (const source of elm.sources()) {
             const version = source['data-mh-version']
             assetKeys[version] = source['data-mh-asset-key']
             imageURLs[version] = source['data-mh-draft']
-            localTransforms[version] = source['data-mh-local-transforms'] || []
+            baseTransforms[version]
+                = transformsToClient(source['data-mh-base-transforms'] || [])
         }
 
         editImage(
@@ -73,7 +74,7 @@ export function apply(elm, onDone, uploadURL) {
             uploadURL,
             assetKeys,
             imageURLs,
-            localTransforms,
+            baseTransforms,
             false
         )
 
@@ -152,10 +153,6 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Send the image set editor the local transforms (in editor format). Get
-//   the imagined code for editing an image set in place and see if we can't
-//   use this for testing to shorten the process.
-//
 // - Get the image set editor to open up the version editor for the base
 //   version initially. Don't use a version property for this it doesn't have
 //   enough control as we can't send it the the transition flag. Instead create
@@ -182,4 +179,7 @@ export function apply(elm, onDone, uploadURL) {
 //           data-local-transforms="..." // Contains the crop/rotate transforms
 //       >
 //   </picture>
+//
+// - Once we have some local transforms defined to play with add support for
+//   presetting the crop / rotate for an image in the version editor.
 //

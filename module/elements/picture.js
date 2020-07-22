@@ -7,8 +7,6 @@ export class PictureFixture extends ContentEdit.Element {
     constructor(attributes, sources) {
         super('picture', attributes)
 
-        console.log(attributes)
-
         // The source for the picture
         this._sources = []
         if (sources) {
