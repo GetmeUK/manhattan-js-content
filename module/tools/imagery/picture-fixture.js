@@ -37,9 +37,7 @@ function editImage(
         uploadURL,
         $.one('[data-mh-content-ui]')
     )
-    imageEditor.init()
-    imageEditor.show(transition)
-
+    imageEditor.init(transition)
 }
 
 
@@ -75,7 +73,7 @@ export function apply(elm, onDone, uploadURL) {
             assetKeys,
             imageURLs,
             baseTransforms,
-            false
+            true
         )
 
     } else {
@@ -153,17 +151,41 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Get the image set editor to open up the version editor for the base
-//   version initially. Don't use a version property for this it doesn't have
-//   enough control as we can't send it the the transition flag. Instead create
-//   an edit method that accepts a version and transition flag, call this
-//   instead of show (which can be removed as a method).
+// - Listen for and switch to the relevant version when the version is changed
+//   in the image set editor.
 //
-// - Create a custom version control in our version editor. When the version
-//   is changed this should trigger an event against overlay that the image set
-//   editor can listen to and on receiving can use the edit method to swich to
-//   editing a different version, we'll need to send the version labels dict
-//   and the current version to the version editor.
+// - We need to get the transforms from the editor whenever the version changes
+//   and update the base transforms model we have (we'd do the same on
+//   confirm and on upload where the transforms would be reset).
+//
+// - Once we have some local transforms defined to play with add support for
+//   presetting the crop / rotate for an image in the version editor. I think
+//   this might well be a pain to do :/
+//
+// - Add support for closing the editor and taking no action.
+//
+// - Add upload / clear buttons (dependent on version and own image url)
+//
+// - Add support for clearing a version (e.g the test m version).
+//
+// - Add an upload (acceptor) button.
+//
+// - Add support for uploading an asset (uploader to show during the upload).
+//
+// - We need to be able to generate preview URIs via the image editor without
+//   initializing it (this should be fine, worst case not showing it) in order
+//   to generate data URIs for for all sources on confirm.
+//
+//   Some potential issues that exist are:
+//
+//   - Preview URIs are a fixed size, the picture really needs to be set up
+//     within a frame that can use `object-fit` in order to be able to preview
+//     images.
+//   - We'll need to be able to populate crop/rotate transforms against the
+//     image editor. Potentially we can just cheat at this by setting the
+//     values against the crop tool with a false bounds.
+//
+// - ...
 //
 // - Sources will hold the information relevant for each version of the image
 //   set, e.g:
@@ -179,7 +201,4 @@ export function apply(elm, onDone, uploadURL) {
 //           data-local-transforms="..." // Contains the crop/rotate transforms
 //       >
 //   </picture>
-//
-// - Once we have some local transforms defined to play with add support for
-//   presetting the crop / rotate for an image in the version editor.
 //

@@ -45,7 +45,7 @@ export class ImageSetEditor {
         this._editor = null
 
         // The current version of the image set being edited
-        this._version = this.baseVersion
+        this._version = null
 
         // Domain for related DOM elements
         this._dom = {container}
@@ -61,33 +61,13 @@ export class ImageSetEditor {
         return this._version
     }
 
-    set version(version) {
-        if (version !== this._version) {
-            return
-        }
-
-        // Change the version
-        this._version = version
-
-        // ?? What if version is called before we've initialized the editor?
-
-        // Create a new editor for this version of the image set
-        this._imageEditor = new VersionEditor(
-            this.getImageURL(version),
-            this._cropAspectRatios[version],
-            true,
-            [600, 600],
-            this._dom.container
-        )
-        this._imageEditor.init()
-    }
-
     // Public methods
 
     /**
      * Remove the image set editor.
      */
     destroy() {
+        // @@
         console.log(this, 'destroy')
     }
 
@@ -105,21 +85,48 @@ export class ImageSetEditor {
      * Hide the image set editor.
      */
     hide() {
+        // @@
         console.log(this, 'hide')
     }
 
     /**
      * Initialize the image set editor.
      */
-    init() {
-        this.version = this.baseVersion
+    init(transition) {
+
+        // Edit the base version
+        this._edit(this.baseVersion, transition)
     }
 
+    // Private
+
     /**
-     * Show the image set editor.
+     * Edit the given version of the image in the editor.
      */
-    show(transition) {
+    _edit(version, transition) {
+        // Change the version
+        this._version = version
+
+        // Remove any existing image editor
+        if (this._imageEditor) {
+            this._imageEditor.destroy()
+            this._imageEditor = null
+        }
+
+        // Create a new editor for this version of the image set
+        this._imageEditor = new VersionEditor(
+            this.version,
+            this._versionLabels,
+            this.getImageURL(version),
+            this._cropAspectRatios[version] || 1.0,
+            Object.keys(this._cropAspectRatios).length > 0,
+            [600, 600],
+            this._dom.container
+        )
+        this._imageEditor.init()
         this._imageEditor.show()
+
+        // @@ Listen for events
 
         // If switching from the uploader to the editor we don't
         // transition (using a fade).
@@ -129,4 +136,5 @@ export class ImageSetEditor {
             this._imageEditor.overlay.classList.remove('mh-overlay--no-fade')
         }
     }
+
 }

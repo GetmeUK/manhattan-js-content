@@ -196,7 +196,8 @@ export function apply(elm, onDone, uploadURL) {
             onDone,
             elm.attr('data-mh-asset-key'),
             elm.attr('data-mh-draft'),
-            1.0
+            1.0,
+            true
         )
 
     } else {
