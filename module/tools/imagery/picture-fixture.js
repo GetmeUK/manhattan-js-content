@@ -129,11 +129,9 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Build a custom VersionEditor as a base, we'll have a bunch of work to do
-//   to this but initially don't create the controls and get the custom CSS in
-//   place. Switch to using this in the image set editor.
-//
-// - Send the image set editor the local transforms (in editor format).
+// - Send the image set editor the local transforms (in editor format). Get
+//   the imagined code for editing an image set in place and see if we can't
+//   use this for testing to shorten the process.
 //
 // - Get the image set editor to open up the version editor for the base
 //   version initially. Don't use a version property for this it doesn't have

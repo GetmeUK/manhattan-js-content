@@ -1,0 +1,106 @@
+.mh-version-editor {
+
+    &__table {
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        &--no-transitions {
+            * {
+                transition: none !important;
+            }
+        }
+    }
+
+    &__image {
+        border-radius: 4px;
+        overflow: hidden;
+        position: absolute;
+
+        transition: all 0.5s cubic-bezier(0.87, -0.41, 0.19, 1.44);
+    }
+
+    &__image-mask {
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        bottom: -3px;
+        content: '';
+        display: block;
+        filter: blur(2px) contrast(75%) saturate(75%);
+        left: -3px;
+        position: absolute;
+        right: -3px;
+        top: -3px;
+
+        &::after {
+            background: rgba(244, 250, 255, 0.5);
+            bottom: 0;
+            content: '';
+            display: block;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+    }
+
+    &__control-region {
+        display: flex;
+        height: 48px;
+        width: 50.00%;
+
+        &--left {
+            justify-content: flex-start;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+
+        &--center {
+            justify-content: flex-start;
+        }
+
+        &--right {
+            justify-content: flex-end;
+        }
+
+        @media (min-width: 820px) {
+            width: 33.33%;
+
+            &--left {
+                justify-content: flex-start;
+            }
+
+            &--center {
+                justify-content: center;
+            }
+
+            &--right {
+                justify-content: flex-end;
+            }
+        }
+    }
+
+    .mh-overlay__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        height: 104px;
+        left: 32px;
+        right: 32px;
+
+        @media (min-width: 600px) {
+            left: 96px;
+            right: 96px;
+        }
+
+        @media (min-width: 820px) {
+            height: 48px;
+        }
+    }
+
+    .mh-overlay__rotate {
+        margin-right: 0;
+    }
+}

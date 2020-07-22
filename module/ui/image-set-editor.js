@@ -1,6 +1,6 @@
 import * as $ from 'manhattan-essentials'
 
-import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
+import {VersionEditor} from './version-editor'
 
 
 /**
@@ -12,6 +12,7 @@ export class ImageSetEditor {
     constructor(
         assetKeys,
         imageURLs,
+        localTransforms,
         versions,
         versionLabels,
         cropAspectRatios,
@@ -19,7 +20,14 @@ export class ImageSetEditor {
         container=null
     ) {
 
-        // @@ Local transforms???
+        // A map of asset keys for versions
+        this._assetKeys = Object.assign({}, assetKeys)
+
+        // A map of image URLs for versions
+        this._imageURLs = Object.assign({}, imageURLs)
+
+        // A set of local transforms
+        this._localTransforms = Object.assign({}, localTransforms)
 
         // A list of versions defined for the image set
         this._versions = versions.slice()
@@ -32,12 +40,6 @@ export class ImageSetEditor {
 
         // The URL images should be uploaded to
         this._uploadURL = uploadURL
-
-        // A map of asset keys for versions
-        this._assetKeys = Object.assign({}, assetKeys)
-
-        // A map of image URLs for versions
-        this._imageURLs = Object.assign({}, imageURLs)
 
         // The current image editor (the image set editor displays)
         this._editor = null
@@ -70,7 +72,7 @@ export class ImageSetEditor {
         // ?? What if version is called before we've initialized the editor?
 
         // Create a new editor for this version of the image set
-        this._imageEditor = new ImageEditor(
+        this._imageEditor = new VersionEditor(
             this.getImageURL(version),
             this._cropAspectRatios[version],
             true,
