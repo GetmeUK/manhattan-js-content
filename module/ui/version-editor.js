@@ -77,7 +77,7 @@ export class VersionEditor extends ImageEditor {
                     if (versionElm.dataset.version !== this._version) {
                         $.dispatch(
                             this.overlay,
-                            'versionChange',
+                            'versionchange',
                             {'version': versionElm.dataset.version}
                         )
                     }

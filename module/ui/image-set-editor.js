@@ -49,6 +49,13 @@ export class ImageSetEditor {
 
         // Domain for related DOM elements
         this._dom = {container}
+
+        // Event handlers
+        this._handlers = {
+            'versionChange': (ev) => {
+                this._edit(ev.version, false)
+            }
+        }
     }
 
     // Getters & Setters
@@ -104,14 +111,18 @@ export class ImageSetEditor {
      * Edit the given version of the image in the editor.
      */
     _edit(version, transition) {
-        // Change the version
-        this._version = version
-
-        // Remove any existing image editor
         if (this._imageEditor) {
+
+            // Store the transforms for the current version before switching
+            this._baseTransforms[this._version] = this._imageEditor.transforms
+
+            // Remove the existing image editor
             this._imageEditor.destroy()
             this._imageEditor = null
         }
+
+        // Change the version
+        this._version = version
 
         // Create a new editor for this version of the image set
         this._imageEditor = new VersionEditor(
@@ -124,9 +135,21 @@ export class ImageSetEditor {
             this._dom.container
         )
         this._imageEditor.init()
+
+        // @@ We need to figure out how we will configure the crop tool
+        // this._imageEditor._orientation = 90
+        // this._imageEditor._cropTool._orientation = 90
+        // this._imageEditor._cropTool._region = [0, 0, 100, 100]
+
         this._imageEditor.show()
 
-        // @@ Listen for events
+        // Listen for events
+        $.listen(
+            this._imageEditor.overlay,
+            {'versionchange': this._handlers.versionChange}
+        )
+
+        // @@ other events
 
         // If switching from the uploader to the editor we don't
         // transition (using a fade).

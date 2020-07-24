@@ -151,9 +151,6 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Listen for and switch to the relevant version when the version is changed
-//   in the image set editor.
-//
 // - We need to get the transforms from the editor whenever the version changes
 //   and update the base transforms model we have (we'd do the same on
 //   confirm and on upload where the transforms would be reset).

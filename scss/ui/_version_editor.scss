@@ -123,6 +123,10 @@
             .mh-version-editor {
                 &__version {
                     display: block;
+
+                    &--selected {
+                        position: static;
+                    }
                 }
             }
         }

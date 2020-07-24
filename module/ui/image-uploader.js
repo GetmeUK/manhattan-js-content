@@ -109,7 +109,6 @@ export class ImageUploader extends Overlay {
         )
         this._uploader.init()
 
-
         $.listen(
             this._uploader.uploader,
             {
