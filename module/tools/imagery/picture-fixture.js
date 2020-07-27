@@ -27,7 +27,7 @@ function editImage(
         = JSON.parse(proxy.dataset.mhImageSetCropAspectRatios)
 
     // Create UI to allow the user to edit the image
-    const imageEditor = new ImageSetEditor(
+    const imageSetEditor = new ImageSetEditor(
         assetKeys,
         imageURLs,
         baseTransforms,
@@ -37,7 +37,24 @@ function editImage(
         uploadURL,
         $.one('[data-mh-content-ui]')
     )
-    imageEditor.init(transition)
+    imageSetEditor.init(transition)
+
+    $.listen(
+        imageSetEditor.container,
+        {
+            'okay': () => {
+                console.log('okay')
+            },
+            'cancel': () => {
+                // User cancelled editing the image
+                if (elm.restoreState) {
+                    elm.restoreState()
+                }
+
+                onDone(false)
+            }
+        }
+    )
 }
 
 
@@ -150,16 +167,6 @@ export function apply(elm, onDone, uploadURL) {
 
 
 // # TODO
-//
-// - We need to get the transforms from the editor whenever the version changes
-//   and update the base transforms model we have (we'd do the same on
-//   confirm and on upload where the transforms would be reset).
-//
-// - Once we have some local transforms defined to play with add support for
-//   presetting the crop / rotate for an image in the version editor. I think
-//   this might well be a pain to do :/
-//
-// - Add support for closing the editor and taking no action.
 //
 // - Add upload / clear buttons (dependent on version and own image url)
 //

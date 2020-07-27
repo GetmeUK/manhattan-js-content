@@ -17,7 +17,7 @@ export class ImageSetEditor {
         versionLabels,
         cropAspectRatios,
         uploadURL,
-        container=null
+        container
     ) {
 
         // A map of asset keys for versions
@@ -52,6 +52,13 @@ export class ImageSetEditor {
 
         // Event handlers
         this._handlers = {
+            'cancel': (ev) => {
+                this._imageEditor.hide()
+                $.dispatch(this._dom.container, 'cancel')
+            },
+            'hidden': (ev) => {
+                this._imageEditor.destroy()
+            },
             'versionChange': (ev) => {
                 this._edit(ev.version, false)
             }
@@ -62,6 +69,10 @@ export class ImageSetEditor {
 
     get baseVersion() {
         return this._versions[0]
+    }
+
+    get container() {
+        return this._dom.container
     }
 
     get version() {
@@ -136,27 +147,16 @@ export class ImageSetEditor {
             this._dom.container
         )
         this._imageEditor.init()
-
-        // this._imageEditor._orientation = 90
-        // this._imageEditor._cropTool._orientation = 90
-        // this._imageEditor._cropTool._region = [0, 0, 100, 100]
-
-        // @@ START HERE
-        // - Send the base transforms through to the version editor.
-        // - Add a setter for crop against the crop tool.
-        // - Override the crop set up in the version editor to use the
-        //   transforms provided as a base for initializing the crop tool.
-        //   Set the orientation and crop (decimal region) before setting the
-        //   crop tool as visible.
-        // - Allow transforms to be set not just got
-        //
-
         this._imageEditor.show()
 
         // Listen for events
         $.listen(
             this._imageEditor.overlay,
-            {'versionchange': this._handlers.versionChange}
+            {
+                'cancel': this._handlers.cancel,
+                'hidden': this._handlers.hidden,
+                'versionchange': this._handlers.versionChange
+            }
         )
 
         // @@ other events
