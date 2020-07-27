@@ -168,8 +168,6 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Add an upload (acceptor) button.
-//
 // - Add support for uploading an asset (uploader to show during the upload).
 //
 // - We need to be able to generate preview URIs via the image editor without

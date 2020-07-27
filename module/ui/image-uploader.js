@@ -59,7 +59,7 @@ export class ImageUploader extends Overlay {
             'Select an image...',
             'Drop image here',
             true,
-            '',
+            'image/*',
             false
         )
         this._acceptor.init()

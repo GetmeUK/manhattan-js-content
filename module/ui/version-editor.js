@@ -1,7 +1,8 @@
 
 import * as $ from 'manhattan-essentials'
-import {CropTool} from 'manhattan-assets/module/ui//crop-tool'
+import {CropTool} from 'manhattan-assets/module/ui/crop-tool'
 import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
+import {MiniAcceptor} from 'manhattan-assets/module/ui/acceptor'
 import {Overlay} from 'manhattan-assets/module/ui/overlay'
 
 
@@ -46,6 +47,9 @@ export class VersionEditor extends ImageEditor {
 
         // The initial transforms for the editor
         this._initialTransforms = initialTransforms
+
+        // An acceptor for uploading new version images
+        this._acceptor = null
 
         // Event handlers
 
@@ -186,8 +190,39 @@ export class VersionEditor extends ImageEditor {
             // image or clearing an image for a version.
             if (this._hasOwnImage) {
                 this.addRegionButton('center', 'clear', 'clear', 'clear')
+
             } else {
-                this.addRegionButton('center', 'upload', 'upload', 'upload')
+
+                // Add the upload button
+                const uploadElm = $.create(
+                    'div',
+                    {'class': Overlay.css['upload']}
+                )
+                uploadElm.setAttribute('title', Overlay.tooltips['upload'])
+                this._dom['buttonRegions']['center'].appendChild(uploadElm)
+
+                // Add acceptor to the upload version
+                this._acceptor = new MiniAcceptor(
+                    uploadElm,
+                    'content__acceptor',
+                    'image/*'
+                )
+                this._acceptor.init()
+
+                // Set up event handlers for the acceptor
+                $.listen(
+                    this._acceptor.acceptor,
+                    {
+                        'accepted': (event) => {
+                            // @@ START HERE. Trigger an upload event and this
+                            // can have the image set editor switch to
+                            // uploading via ImageUploader which can then be
+                            // captured and applied to the current verison (in
+                            // theory).
+                            console.log(event.files[0])
+                        }
+                    }
+                )
             }
         }
     }
