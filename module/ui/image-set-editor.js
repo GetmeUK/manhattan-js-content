@@ -129,6 +129,7 @@ export class ImageSetEditor {
             this.version,
             this._versionLabels,
             this.getImageURL(version),
+            this._baseTransforms[this._version],
             this._cropAspectRatios[version] || 1.0,
             Object.keys(this._cropAspectRatios).length > 0,
             [600, 600],
@@ -136,10 +137,19 @@ export class ImageSetEditor {
         )
         this._imageEditor.init()
 
-        // @@ We need to figure out how we will configure the crop tool
         // this._imageEditor._orientation = 90
         // this._imageEditor._cropTool._orientation = 90
         // this._imageEditor._cropTool._region = [0, 0, 100, 100]
+
+        // @@ START HERE
+        // - Send the base transforms through to the version editor.
+        // - Add a setter for crop against the crop tool.
+        // - Override the crop set up in the version editor to use the
+        //   transforms provided as a base for initializing the crop tool.
+        //   Set the orientation and crop (decimal region) before setting the
+        //   crop tool as visible.
+        // - Allow transforms to be set not just got
+        //
 
         this._imageEditor.show()
 
