@@ -13,9 +13,11 @@ import {Overlay} from 'manhattan-assets/module/ui/overlay'
 export class VersionEditor extends ImageEditor {
 
     constructor(
+        baseVersion,
         version,
         versionLabels,
         imageURL,
+        hasOwnImage,
         initialTransforms,
         cropAspectRatio=1.0,
         fixCropAspectRatio=false,
@@ -30,11 +32,17 @@ export class VersionEditor extends ImageEditor {
             container
         )
 
+        // The base version
+        this._baseVersion = baseVersion
+
         // The version currently being edited
         this._version = version
 
         // A map of versions to their associated labels
         this._versionLabels = Object.assign({}, versionLabels)
+
+        // Flag indicating if the version has it's own image
+        this._hasOwnImage = hasOwnImage
 
         // The initial transforms for the editor
         this._initialTransforms = initialTransforms
@@ -172,6 +180,16 @@ export class VersionEditor extends ImageEditor {
         this.addRegionButton('center', 'rotate', 'rotate', 'rotate')
         this.addRegionButton('right', 'okay', 'okay', 'okay')
         this.addRegionButton('right', 'cancel', 'cancel', 'cancel')
+
+        if (this._version !== this._baseVersion) {
+            // In the non-base version we can support uploading of a new
+            // image or clearing an image for a version.
+            if (this._hasOwnImage) {
+                this.addRegionButton('center', 'clear', 'clear', 'clear')
+            } else {
+                this.addRegionButton('center', 'upload', 'upload', 'upload')
+            }
+        }
     }
 
     /**
@@ -328,3 +346,15 @@ VersionEditor.css = {
      */
     'versionsOpen': 'mh-version-editor__versions--open'
 }
+
+
+// Extend the overlay to support additional buttons present in the version
+// editor.
+
+// CSS
+Overlay.css['clear'] = 'mh-overlay__clear'
+Overlay.css['upload'] = 'mh-overlay__upload'
+
+// Tooltip
+Overlay.tooltips['clear'] = 'Clear image for version (revert to base)'
+Overlay.tooltips['upload'] = 'Upload a new image for the version'

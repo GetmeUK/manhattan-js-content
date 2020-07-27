@@ -168,10 +168,6 @@ export function apply(elm, onDone, uploadURL) {
 
 // # TODO
 //
-// - Add upload / clear buttons (dependent on version and own image url)
-//
-// - Add support for clearing a version (e.g the test m version).
-//
 // - Add an upload (acceptor) button.
 //
 // - Add support for uploading an asset (uploader to show during the upload).

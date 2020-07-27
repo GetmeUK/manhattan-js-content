@@ -56,6 +56,13 @@ export class ImageSetEditor {
                 this._imageEditor.hide()
                 $.dispatch(this._dom.container, 'cancel')
             },
+            'clear': (ev) => {
+                // Remove the image URL and base transforms associated with
+                // this version.
+                delete this._imageURLs[this.version]
+                delete this._baseTransforms[this.version]
+                this._edit(this.version, false)
+            },
             'hidden': (ev) => {
                 this._imageEditor.destroy()
             },
@@ -137,9 +144,11 @@ export class ImageSetEditor {
 
         // Create a new editor for this version of the image set
         this._imageEditor = new VersionEditor(
+            this.baseVersion,
             this.version,
             this._versionLabels,
             this.getImageURL(version),
+            this.getImageURL(version) !== this.getImageURL(this.baseVersion),
             this._baseTransforms[this._version],
             this._cropAspectRatios[version] || 1.0,
             Object.keys(this._cropAspectRatios).length > 0,
@@ -154,6 +163,7 @@ export class ImageSetEditor {
             this._imageEditor.overlay,
             {
                 'cancel': this._handlers.cancel,
+                'clear': this._handlers.clear,
                 'hidden': this._handlers.hidden,
                 'versionchange': this._handlers.versionChange
             }
