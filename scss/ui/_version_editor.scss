@@ -253,6 +253,7 @@
 
         &__upload {
             @include overlay-btn();
+            position: relative;
 
             &::after {
                 background-image: url('#{$mh_assets_image_path}upload.svg');
