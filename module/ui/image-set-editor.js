@@ -61,7 +61,7 @@ export class ImageSetEditor {
                 // this version.
                 delete this._imageURLs[this.version]
                 delete this._baseTransforms[this.version]
-                this._edit(this.version, false)
+                this._edit(this.version, false, false)
             },
             'hidden': (ev) => {
                 this._imageEditor.destroy()
@@ -128,11 +128,15 @@ export class ImageSetEditor {
     /**
      * Edit the given version of the image in the editor.
      */
-    _edit(version, transition) {
+    _edit(version, transition, storeTransforms=true) {
         if (this._imageEditor) {
 
-            // Store the transforms for the current version before switching
-            this._baseTransforms[this._version] = this._imageEditor.transforms
+            if (storeTransforms) {
+                // Store the transforms for the current version before
+                // switching.
+                this._baseTransforms[this._version]
+                    = this._imageEditor.transforms
+            }
 
             // Remove the existing image editor
             this._imageEditor.destroy()
