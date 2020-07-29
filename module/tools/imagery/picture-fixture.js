@@ -34,16 +34,43 @@ function editImage(
         versions,
         versionLabels,
         cropAspectRatios,
+        'mhImageSetFixCropAspectRatio' in proxy.dataset,
         uploadURL,
         $.one('[data-mh-content-ui]')
     )
     imageSetEditor.init(transition)
 
     $.listen(
-        imageSetEditor.container,
+        imageSetEditor.eventTarget,
         {
-            'okay': () => {
-                console.log('okay')
+            'okay': (event) => {
+                console.log(event.versionData)
+
+                // - srcset use previewURI if one, else use existing URL,
+                //   else use base version draft image.
+                // - media (should always have a value)
+                // - mh-asset-key is optional (has to have its own asset)
+                // - base versions is optional (may not have been set for the
+                //   image).
+                // - data-mh-draft is optional (has to have its own asset)
+                // - data-local-transforms (should always have a value)
+                //
+                //
+                //   <picture>
+                //       <source
+                //           srcset="..."
+                //           media="(...)"
+                //           data-mh-version="l"
+                //           data-mh-asset-key="..."
+                //           data-mh-draft="..."
+                //           data-base-transforms="..."
+                //           data-local-transforms="..."
+                //       >
+                //   </picture>
+                //
+
+                onDone(true)
+                imageSetEditor.hide()
             },
             'cancel': () => {
                 // User cancelled editing the image
@@ -52,6 +79,10 @@ function editImage(
                 }
 
                 onDone(false)
+                imageSetEditor.hide()
+            },
+            'hidden': () => {
+                imageSetEditor.destroy()
             }
         }
     )
@@ -122,7 +153,6 @@ export function apply(elm, onDone, uploadURL) {
 
                     // Switch to the editing environment
                     const {asset} = event
-                    const meta = event.asset['core_meta']['image']
                     const {variations} = event.asset
 
                     assetKeys = {}
@@ -164,39 +194,3 @@ export function apply(elm, onDone, uploadURL) {
         )
     }
 }
-
-
-// # TODO
-//
-// - Add support for uploading an asset (uploader to show during the upload).
-//
-// - We need to be able to generate preview URIs via the image editor without
-//   initializing it (this should be fine, worst case not showing it) in order
-//   to generate data URIs for for all sources on confirm.
-//
-//   Some potential issues that exist are:
-//
-//   - Preview URIs are a fixed size, the picture really needs to be set up
-//     within a frame that can use `object-fit` in order to be able to preview
-//     images.
-//   - We'll need to be able to populate crop/rotate transforms against the
-//     image editor. Potentially we can just cheat at this by setting the
-//     values against the crop tool with a false bounds.
-//
-// - ...
-//
-// - Sources will hold the information relevant for each version of the image
-//   set, e.g:
-//
-//   <picture>
-//       <source
-//           srcset="..."
-//           media="(...)"
-//           data-mh-version="l"
-//           data-mh-asset-key="..." // Optional if uses base version
-//           data-mh-draft="..." // Optional if uses base version
-//           data-base-transforms="..." // Optional (should always have a value)
-//           data-local-transforms="..." // Contains the crop/rotate transforms
-//       >
-//   </picture>
-//

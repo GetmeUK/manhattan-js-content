@@ -68,22 +68,19 @@ export class ImageUploader extends Overlay {
             this._acceptor.acceptor,
             {
                 'accepted': (event) => {
-                    this._upload(event.files[0])
+                    this.upload(event.files[0])
                 }
             }
         )
 
         // Create the buttons
         this.addButton('cancel', 'cancel')
-
     }
-
-    // -- Private methods --
 
     /**
      * Upload a file.
      */
-    _upload(file) {
+    upload(file) {
 
         // Remove the acceptor
         if (this._acceptor) {
@@ -136,7 +133,6 @@ export class ImageUploader extends Overlay {
             }
         )
     }
-
 }
 
 

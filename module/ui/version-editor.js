@@ -214,12 +214,11 @@ export class VersionEditor extends ImageEditor {
                     this._acceptor.acceptor,
                     {
                         'accepted': (event) => {
-                            // @@ START HERE. Trigger an upload event and this
-                            // can have the image set editor switch to
-                            // uploading via ImageUploader which can then be
-                            // captured and applied to the current verison (in
-                            // theory).
-                            console.log(event.files[0])
+                            $.dispatch(
+                                this.overlay,
+                                'upload',
+                                {'files': event.files}
+                            )
                         }
                     }
                 )
@@ -274,7 +273,7 @@ export class VersionEditor extends ImageEditor {
             this._dom.table,
             this._imageURL,
             this._cropAspectRatio,
-            true
+            this._fixCropAspectRatio
         )
         this._cropTool.init()
 
