@@ -114,7 +114,7 @@ export class PictureFixture extends ContentEdit.Element {
         }
 
         this._sources = []
-        for (source of this._sources) {
+        for (source of sources) {
             this._sources.push(Object.assign({}, source))
         }
 

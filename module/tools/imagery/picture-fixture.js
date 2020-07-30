@@ -23,8 +23,10 @@ function editImage(
     let proxy = $.closest(elm.domElement(), '[data-mh-image-set-proxy]')
     const versions = JSON.parse(proxy.dataset.mhImageSetVersions)
     const versionLabels = JSON.parse(proxy.dataset.mhImageSetVersionLabels)
+    const media = JSON.parse(proxy.dataset.mhImageSetMedia)
+    const localTransforms = JSON.parse(proxy.dataset.mhImageSetTransforms)
     let cropAspectRatios = null
-    if (cropAspectRatios) {
+    if (proxy.dataset.mhImageSetCropAspectRatios) {
         cropAspectRatios = JSON.parse(proxy.dataset.mhImageSetCropAspectRatios)
     }
 
@@ -46,30 +48,67 @@ function editImage(
         imageSetEditor.eventTarget,
         {
             'okay': (event) => {
-                console.log(event.versionData)
 
-                // - srcset use previewURI if one, else use existing URL,
-                //   else use base version draft image.
-                // - media (should always have a value)
-                // - mh-asset-key is optional (has to have its own asset)
-                // - base versions is optional (may not have been set for the
-                //   image).
-                // - data-mh-draft is optional (has to have its own asset)
-                // - data-local-transforms (should always have a value)
-                //
-                //
-                //   <picture>
-                //       <source
-                //           srcset="..."
-                //           media="(...)"
-                //           data-mh-version="l"
-                //           data-mh-asset-key="..."
-                //           data-mh-draft="..."
-                //           data-base-transforms="..."
-                //           data-local-transforms="..."
-                //       >
-                //   </picture>
-                //
+                // Get the base draft image
+
+                // Build a map of existing sources for the picture.
+                const sources = {}
+                for (const source of elm.sources()) {
+                    if (source['data-mh-version']) {
+                        sources[source['data-mh-version']] = source
+                    }
+                }
+
+                // Build a new list of sources for the picture
+                const newSources = []
+                for (const version of versions) {
+                    if (version in event.versionData) {
+                        const data = event.versionData[version]
+                        const source = sources[version]
+                        const newSource = {
+                            'media': media[version],
+                            'data-mh-version': version
+                        }
+
+                        // srcset
+                        newSource['srcset'] = data.previewURI
+                        if (!newSource['srcset'] && source) {
+                            newSource['srcset'] = source['srcset']
+                        }
+                        if (!newSource['srcset']) {
+                            newSource['srcset'] = imageSetEditor
+                                .getImageURL(version)
+                        }
+
+                        // data-mh-asset-key
+                        if (data.assetKey) {
+                            newSource['data-mh-asset-key'] = data.assetKey
+                        }
+
+                        // data-mh-draft
+                        if (data.draftURL) {
+                            newSource['data-mh-draft'] = data.draftURL
+                        }
+
+                        // data-mh-base-transforms
+                        if (data.baseTransforms.length > 0) {
+                            newSource['data-base-transforms']
+                                = JSON.stringify(transformsToServer(data
+                                    .baseTransforms))
+                        }
+
+                        // data-local-transforms
+                        if ((localTransforms[version] || []).length > 0) {
+                            newSource['data-local-transforms']
+                                = JSON.stringify(localTransforms[version])
+                        }
+
+                        newSources.push(newSource)
+                    }
+                }
+
+                // Update the sources for the picture element
+                elm.sources(newSources)
 
                 onDone(true)
                 imageSetEditor.hide()
