@@ -3,7 +3,7 @@ import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
 import * as $ from 'manhattan-essentials'
 
 import {ImageUploader} from './../../ui/image-uploader'
-import {transformsToServer} from './utils'
+import {transformsToClient, transformsToServer} from './utils'
 
 
 // Private
@@ -39,14 +39,20 @@ function editImage(
     onDone,
     key,
     imageURL,
-    naturalRatio,
     transition
 ) {
+
+    // Extract any initial transforms
+    let initialTransforms = elm.attr('data-mh-base-transforms')
+    if (initialTransforms) {
+        initialTransforms = transformsToClient(JSON.parse(initialTransforms))
+    }
 
     // Create UI to allow the user to edit the image
     const imageEditor = new ImageEditor(
         imageURL,
-        naturalRatio,
+        initialTransforms,
+        null,
         false,
         [600, 600],
         $.one('[data-mh-content-ui]')
@@ -132,7 +138,6 @@ export function apply(elm, onDone, uploadURL) {
             onDone,
             elm.attr('data-mh-asset-key'),
             elm.attr('data-mh-draft'),
-            1.0 / elm.aspectRatio(),
             true
         )
 
@@ -165,7 +170,6 @@ export function apply(elm, onDone, uploadURL) {
                         onDone,
                         asset['key'],
                         variations['--draft--']['url'],
-                        meta['size'][0] / meta['size'][1],
                         false
                     )
                 },

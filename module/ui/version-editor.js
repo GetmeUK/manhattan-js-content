@@ -18,8 +18,8 @@ export class VersionEditor extends ImageEditor {
         version,
         versionLabels,
         imageURL,
-        hasOwnImage,
         initialTransforms,
+        hasOwnImage,
         cropAspectRatio=1.0,
         fixCropAspectRatio=false,
         maxPreviewSize=[600, 600],
@@ -27,6 +27,7 @@ export class VersionEditor extends ImageEditor {
     ) {
         super(
             imageURL,
+            initialTransforms,
             cropAspectRatio,
             fixCropAspectRatio,
             maxPreviewSize,
@@ -44,9 +45,6 @@ export class VersionEditor extends ImageEditor {
 
         // Flag indicating if the version has it's own image
         this._hasOwnImage = hasOwnImage
-
-        // The initial transforms for the editor
-        this._initialTransforms = initialTransforms
 
         // An acceptor for uploading new version images
         this._acceptor = null
@@ -258,70 +256,6 @@ export class VersionEditor extends ImageEditor {
 
         return buttonElm
     }
-
-    // -- Private methods --
-
-    /**
-     * Add the crop tool to the editor table.
-     */
-    _addCropTool() {
-        const {orientation, cropRegion}
-            = this._transformsToProperties(this._initialTransforms)
-
-        // Create the crop tool for the editor
-        this._cropTool = new CropTool(
-            this._dom.table,
-            this._imageURL,
-            this._cropAspectRatio,
-            this._fixCropAspectRatio
-        )
-        this._cropTool.init()
-
-        // Fit the image within the table
-        this._orientation = orientation
-        this._fit(true)
-
-        // Set the image's background image
-        this._dom.mask.style
-            .backgroundImage = `url(${this._imageURL})`
-
-        // Set the orientation and region for the crop tool
-        this._cropTool.set(orientation, cropRegion)
-        this._cropTool.visible = true
-    }
-
-    /**
-     * Get the orientation and crop region from a list of transforms.
-     */
-    _transformsToProperties(transforms) {
-
-        // Defaults (orientation to zero, crop to use the aspect ratio and be
-        // centered.
-        let orientation = 0
-        let cropRegion = null
-
-        for (let transform of transforms || []) {
-            switch (transform[0]) {
-
-            case 'rotate':
-                [transform, orientation] = transform
-                break
-
-            case 'crop':
-                [transform, cropRegion] = transform
-                break
-
-            // no default
-
-            }
-        }
-
-        return {
-            orientation,
-            cropRegion
-        }
-    }
-
 }
 
 

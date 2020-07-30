@@ -291,9 +291,9 @@ export class ImageSetEditor {
                 this.version,
                 this._versionLabels,
                 this.getImageURL(version),
-                this.hasOwnImage(version),
                 this._baseTransforms[this._version],
-                this._cropAspectRatios[version] || 1.0,
+                this.hasOwnImage(version),
+                this._cropAspectRatios[version] || null,
                 this._fixCropAspectRatio,
                 [600, 600],
                 this.container

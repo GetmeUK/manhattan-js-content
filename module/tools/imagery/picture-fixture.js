@@ -23,8 +23,10 @@ function editImage(
     let proxy = $.closest(elm.domElement(), '[data-mh-image-set-proxy]')
     const versions = JSON.parse(proxy.dataset.mhImageSetVersions)
     const versionLabels = JSON.parse(proxy.dataset.mhImageSetVersionLabels)
-    const cropAspectRatios
-        = JSON.parse(proxy.dataset.mhImageSetCropAspectRatios)
+    let cropAspectRatios = null
+    if (cropAspectRatios) {
+        cropAspectRatios = JSON.parse(proxy.dataset.mhImageSetCropAspectRatios)
+    }
 
     // Create UI to allow the user to edit the image
     const imageSetEditor = new ImageSetEditor(

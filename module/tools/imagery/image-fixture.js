@@ -3,7 +3,7 @@ import {ImageEditor} from 'manhattan-assets/module/ui/image-editor'
 import * as $ from 'manhattan-essentials'
 
 import {ImageUploader} from './../../ui/image-uploader'
-import {transformsToServer} from './utils'
+import {transformsToClient, transformsToServer} from './utils'
 
 
 // Private
@@ -12,8 +12,8 @@ import {transformsToServer} from './utils'
  * Return crop instructions for the given image, or sensible defaults if there
  * are none.
  */
-export function getCropOptions(elm, naturalRatio) {
-    let cropRatio = naturalRatio
+export function getCropOptions(elm) {
+    let cropRatio = null
     let fixCropRatio = false
 
     // New approach
@@ -99,15 +99,21 @@ function editImage(
     onDone,
     key,
     imageURL,
-    naturalRatio,
     transition
 ) {
     // Get crop options
-    const [cropRatio, fixCropRatio] = getCropOptions(elm, naturalRatio)
+    const [cropRatio, fixCropRatio] = getCropOptions(elm)
+
+    // Extract any initial transforms
+    let initialTransforms = elm.attr('data-mh-base-transforms')
+    if (initialTransforms) {
+        initialTransforms = transformsToClient(JSON.parse(initialTransforms))
+    }
 
     // Create UI to allow the user to edit the image
     const imageEditor = new ImageEditor(
         imageURL,
+        initialTransforms,
         cropRatio,
         fixCropRatio,
         [600, 600],
@@ -196,7 +202,6 @@ export function apply(elm, onDone, uploadURL) {
             onDone,
             elm.attr('data-mh-asset-key'),
             elm.attr('data-mh-draft'),
-            1.0,
             true
         )
 
@@ -229,7 +234,6 @@ export function apply(elm, onDone, uploadURL) {
                         onDone,
                         asset['key'],
                         variations['--draft--']['url'],
-                        meta['size'][0] / meta['size'][1],
                         false
                     )
                 },
