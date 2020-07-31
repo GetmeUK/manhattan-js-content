@@ -91,15 +91,16 @@ function editImage(
                         }
 
                         // data-mh-base-transforms
+                        console.log(version, data.baseTransforms)
                         if (data.baseTransforms.length > 0) {
-                            newSource['data-base-transforms']
+                            newSource['data-mh-base-transforms']
                                 = JSON.stringify(transformsToServer(data
                                     .baseTransforms))
                         }
 
                         // data-local-transforms
                         if ((localTransforms[version] || []).length > 0) {
-                            newSource['data-local-transforms']
+                            newSource['data-mh-local-transforms']
                                 = JSON.stringify(localTransforms[version])
                         }
 
@@ -149,10 +150,21 @@ export function apply(elm, onDone, uploadURL) {
 
         for (const source of elm.sources()) {
             const version = source['data-mh-version']
-            assetKeys[version] = source['data-mh-asset-key']
-            imageURLs[version] = source['data-mh-draft']
-            baseTransforms[version]
-                = transformsToClient(source['data-mh-base-transforms'] || [])
+
+            if (source['data-mh-asset-key']) {
+                assetKeys[version] = source['data-mh-asset-key']
+            }
+
+            if (source['data-mh-draft']) {
+                imageURLs[version] = source['data-mh-draft']
+            }
+
+            baseTransforms[version] = []
+            if (source['data-mh-base-transforms']) {
+                baseTransforms[version]
+                    = transformsToClient(JSON
+                        .parse(source['data-mh-base-transforms']))
+            }
         }
 
         editImage(
