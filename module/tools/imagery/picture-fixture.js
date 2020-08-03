@@ -91,7 +91,6 @@ function editImage(
                         }
 
                         // data-mh-base-transforms
-                        console.log(version, data.baseTransforms)
                         if (data.baseTransforms.length > 0) {
                             newSource['data-mh-base-transforms']
                                 = JSON.stringify(transformsToServer(data

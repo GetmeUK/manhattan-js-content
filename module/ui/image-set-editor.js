@@ -78,6 +78,7 @@ export class ImageSetEditor {
             'clear': () => {
                 // Remove the image URL and base transforms associated with
                 // this version.
+                delete this._assetKeys[this.version]
                 delete this._imageURLs[this.version]
                 delete this._baseTransforms[this.version]
                 this._edit(this.version, false, false)
