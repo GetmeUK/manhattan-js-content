@@ -86,7 +86,7 @@ function defineSaveProcess(url, params, lock, contentFunc) {
 
 export function init(
     baseURL='/',
-    baseFlowURL='/',
+    baseBlueprintURL='/',
     baseParams={},
     updateSignalKey=null
 ) {
@@ -183,7 +183,7 @@ export function init(
         flowMgr.init(
             '[data-cf-flow]',
             new FlowAPI(
-                baseFlowURL,
+                baseBlueprintURL,
                 baseParams,
                 updateSignalKey
             )
@@ -203,7 +203,7 @@ export function init(
     editor.addEventListener(
         'saved',
         defineSaveProcess(
-            `${baseFlowURL}update-flow-contents`,
+            `${baseBlueprintURL}update-flow-contents`,
             baseParams,
             lock,
             (regions) => {
@@ -223,6 +223,35 @@ export function init(
                             contents[snippetId] = {}
                         }
                         contents[snippetId][regionName] = v
+                    }
+                }
+
+                return contents
+            }
+        )
+    )
+
+    // Local regions
+    editor.addEventListener(
+        'saved',
+        defineSaveProcess(
+            `${baseBlueprintURL}update-contents`,
+            baseParams,
+            lock,
+            (regions) => {
+                const contents = {}
+
+                for (let k of Object.keys(regions)) {
+                    let v = regions[k]
+
+                    // Check the region belongs to a snippet
+                    if(k.startsWith('local:')) {
+
+                        // Extract the snippet Id and region name
+                        const [_, regionName] = k.split(':')
+
+                        // Add the region's content to the snippet
+                        contents[regionName] = v
                     }
                 }
 
